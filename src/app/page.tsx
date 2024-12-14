@@ -2,127 +2,103 @@
 
 import { useState } from "react";
 
-type Message = {
-  role: "user" | "ai";
-  content: string;
-};
+export default function ChatPage() {
+  const [question, setQuestion] = useState("");
+  const [urls, setUrls] = useState("");
+  const [messages, setMessages] = useState<
+    { role: "user" | "ai"; content: string }[]
+  >([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-export default function Home() {
-  const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<Message[]>([
-    { role: "ai", content: "Hello! How can I help you today?" },
-  ]);
-  const [isLoading, setIsLoading] = useState(false);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!question.trim() || !urls.trim()) {
+      setError("Please provide both a question and URLs.");
+      return;
+    }
 
-  const handleSend = async () => {
-    if (!message.trim()) return;
-
-    // Add user message to the conversation
-    const userMessage = { role: "user" as const, content: message };
-    setMessages(prev => [...prev, userMessage]);
-    setMessage("");
-    setIsLoading(true);
+    setError(null);
+    setLoading(true);
+    setMessages((prev) => [...prev, { role: "user", content: question }]);
 
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question,
+          urls: urls.split(",").map((url) => url.trim()),
+        }),
       });
 
-      // TODO: Handle the response from the chat API to display the AI response in the UI
+      if (!response.ok) {
+        throw new Error("Failed to fetch response from the API.");
+      }
 
+      const data = await response.json();
+      const aiResponse =
+        data.answer?.[0]?.message?.content ||
+        "Sorry, I couldn't generate a response.";
 
-
-
-    } catch (error) {
-      console.error("Error:", error);
+      setMessages((prev) => [...prev, { role: "ai", content: aiResponse }]);
+    } catch (err: unknown) {
+      console.error(err);
+      setError("An error occurred while fetching the response.");
     } finally {
-      setIsLoading(false);
+      setLoading(false);
+      setQuestion("");
     }
   };
 
-
-  // TODO: Modify the color schemes, fonts, and UI as needed for a good user experience
-  // Refer to the Tailwind CSS docs here: https://tailwindcss.com/docs/customizing-colors, and here: https://tailwindcss.com/docs/hover-focus-and-other-states
   return (
-    <div className="flex flex-col h-screen bg-gray-900">
-      {/* Header */}
-      <div className="w-full bg-gray-800 border-b border-gray-700 p-4">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-xl font-semibold text-white">Chat</h1>
-        </div>
-      </div>
-
-      {/* Messages Container */}
-      <div className="flex-1 overflow-y-auto pb-32 pt-4">
-        <div className="max-w-3xl mx-auto px-4">
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              className={`flex gap-4 mb-4 ${
-                msg.role === "ai"
-                  ? "justify-start"
-                  : "justify-end flex-row-reverse"
-              }`}
-            >
-              <div
-                className={`px-4 py-2 rounded-2xl max-w-[80%] ${
-                  msg.role === "ai"
-                    ? "bg-gray-800 border border-gray-700 text-gray-100"
-                    : "bg-cyan-600 text-white ml-auto"
-                }`}
-              >
-                {msg.content}
-              </div>
-            </div>
-          ))}
-          {isLoading && (
-            <div className="flex gap-4 mb-4">
-              <div className="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center">
-                <svg
-                  className="w-5 h-5 text-gray-400"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-4-8c.79 0 1.5-.71 1.5-1.5S8.79 9 8 9s-1.5.71-1.5 1.5S7.21 11 8 11zm8 0c.79 0 1.5-.71 1.5-1.5S16.79 9 16 9s-1.5.71-1.5 1.5.71 1.5 1.5 1.5zm-4 4c2.21 0 4-1.79 4-4h-8c0 2.21 1.79 4 4 4z" />
-                </svg>
-              </div>
-              <div className="px-4 py-2 rounded-2xl bg-gray-800 border border-gray-700 text-gray-100">
-                <div className="flex items-center gap-1">
-                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-                  <div className="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></div>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Input Area */}
-      <div className="fixed bottom-0 w-full bg-gray-800 border-t border-gray-700 p-4">
-        <div className="max-w-3xl mx-auto">
-          <div className="flex gap-3 items-center">
-            <input
-              type="text"
-              value={message}
-              onChange={e => setMessage(e.target.value)}
-              onKeyPress={e => e.key === "Enter" && handleSend()}
-              placeholder="Type your message..."
-              className="flex-1 rounded-xl border border-gray-700 bg-gray-900 px-4 py-3 text-gray-100 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent placeholder-gray-400"
-            />
-            <button
-              onClick={handleSend}
-              disabled={isLoading}
-              className="bg-cyan-600 text-white px-5 py-3 rounded-xl hover:bg-cyan-700 transition-all disabled:bg-cyan-800 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isLoading ? "Sending..." : "Send"}
-            </button>
+    <div className="min-h-screen bg-gray-900 text-white p-4">
+      <h1 className="text-3xl font-bold mb-4">AI Chat Assistant</h1>
+      <form onSubmit={handleSubmit} className="mb-6">
+        <label htmlFor="question" className="block mb-2 font-medium">
+          Your Question:
+        </label>
+        <input
+          type="text"
+          id="question"
+          value={question}
+          onChange={(e) => setQuestion(e.target.value)}
+          placeholder="Ask your question..."
+          className="w-full p-2 mb-4 bg-gray-800 text-white rounded"
+        />
+        <label htmlFor="urls" className="block mb-2 font-medium">
+          URLs (comma-separated):
+        </label>
+        <input
+          type="text"
+          id="urls"
+          value={urls}
+          onChange={(e) => setUrls(e.target.value)}
+          placeholder="https://example.com, https://another.com"
+          className="w-full p-2 mb-4 bg-gray-800 text-white rounded"
+        />
+        <button
+          type="submit"
+          disabled={loading}
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-500 rounded font-medium"
+        >
+          {loading ? "Loading..." : "Submit"}
+        </button>
+      </form>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <div className="space-y-4">
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`p-4 rounded ${
+              message.role === "user"
+                ? "bg-gray-800 text-right"
+                : "bg-blue-700 text-left"
+            }`}
+          >
+            <p>{message.content}</p>
           </div>
-        </div>
+        ))}
       </div>
     </div>
   );
