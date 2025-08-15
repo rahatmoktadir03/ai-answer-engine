@@ -30,6 +30,7 @@ export default function ChatInterface() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
+  const [shareSuccess, setShareSuccess] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -109,6 +110,45 @@ export default function ChatInterface() {
     setError(null);
   };
 
+  const shareConversation = async () => {
+    if (messages.length === 0) {
+      setError("No conversation to share");
+      return;
+    }
+
+    try {
+      const conversationText = messages
+        .map(msg => {
+          const timestamp = formatTime(msg.timestamp);
+          const role = msg.role === "user" ? "You" : "AI";
+          let text = `[${timestamp}] ${role}: ${msg.content}`;
+
+          if (msg.sources && msg.sources.length > 0) {
+            text += `\n\nSources:\n${msg.sources.map(source => `• ${source}`).join("\n")}`;
+          }
+
+          return text;
+        })
+        .join("\n\n---\n\n");
+
+      const fullText = `Insight Conversation\n\n${conversationText}`;
+
+      if (navigator.share && navigator.canShare({ text: fullText })) {
+        await navigator.share({
+          title: "Insight Conversation",
+          text: fullText,
+        });
+      } else {
+        await navigator.clipboard.writeText(fullText);
+        setShareSuccess(true);
+        setTimeout(() => setShareSuccess(false), 2000);
+      }
+    } catch (err) {
+      console.error("Failed to share conversation: ", err);
+      setError("Failed to share conversation");
+    }
+  };
+
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString("en-US", {
       hour: "2-digit",
@@ -127,7 +167,7 @@ export default function ChatInterface() {
                 <MessageSquare className="w-6 h-6 text-white" />
               </div>
               <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                AI Answer Engine
+                Insight
               </h1>
             </div>
 
@@ -140,10 +180,15 @@ export default function ChatInterface() {
                 <Trash2 className="w-4 h-4" />
               </button>
               <button
-                className="p-2 rounded-lg border border-gray-600 hover:border-blue-500 hover:bg-blue-500/10 transition-all duration-200"
+                onClick={shareConversation}
+                className="p-2 rounded-lg border border-gray-600 hover:border-blue-500 hover:bg-blue-500/10 transition-all duration-200 relative"
                 title="Share conversation"
               >
-                <Share2 className="w-4 h-4" />
+                {shareSuccess ? (
+                  <Check className="w-4 h-4 text-green-400" />
+                ) : (
+                  <Share2 className="w-4 h-4" />
+                )}
               </button>
             </div>
           </div>

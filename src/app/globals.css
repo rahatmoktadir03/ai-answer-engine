@@ -3,15 +3,47 @@
 @tailwind utilities;
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --card: #1a1a1a;
-  --card-foreground: #ededed;
-  --primary: #3b82f6;
-  --primary-foreground: #ffffff;
-  --muted: #262626;
-  --muted-foreground: #a3a3a3;
-  --border: #404040;
+  /* Vibrant Dark Theme with Violet & Bubblegum Accents */
+  --background: linear-gradient(
+    135deg,
+    #0c0b1e 0%,
+    #1a1b3e 30%,
+    #2d1b69 60%,
+    #4c1d95 100%
+  );
+  --background-solid: #0c0b1e;
+  --foreground: #ffffff;
+  --card: rgba(255, 255, 255, 0.05);
+  --card-foreground: #ffffff;
+  --primary: linear-gradient(
+    135deg,
+    #6366f1 0%,
+    #8b5cf6 30%,
+    #a855f7 60%,
+    #c084fc 100%
+  );
+  --primary-solid: #6366f1;
+  --secondary: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #6366f1 100%);
+  --accent: linear-gradient(
+    135deg,
+    #f59e0b 0%,
+    #ef4444 30%,
+    #ec4899 60%,
+    #f472b6 100%
+  );
+  --success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --violet: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
+  --bubblegum: linear-gradient(
+    135deg,
+    #ec4899 0%,
+    #f472b6 30%,
+    #fbbf24 60%,
+    #fb7185 100%
+  );
+  --muted: rgba(255, 255, 255, 0.1);
+  --muted-foreground: #cbd5e1;
+  --border: rgba(255, 255, 255, 0.15);
+  --hover-glow: rgba(168, 85, 247, 0.4);
 }
 
 * {
@@ -28,7 +60,8 @@ body {
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: var(--background-solid);
+  background-image: var(--background);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
     sans-serif;
   line-height: 1.6;
@@ -36,34 +69,43 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom scrollbar */
+/* Enhanced scrollbar with glow */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--background);
+  background: var(--background-solid);
+  border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border-radius: 6px;
+  border: 2px solid var(--background-solid);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #525252;
+  background: linear-gradient(135deg, #8b5cf6, #a855f7);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
 }
 
-/* Grid pattern for backgrounds */
+/* Enhanced grid pattern with glow */
 .bg-grid-white\/\[0\.05\] {
   background-image: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.05) 1px,
-    transparent 1px
-  );
+      circle at 1px 1px,
+      rgba(139, 92, 246, 0.15) 1px,
+      transparent 0
+    ),
+    radial-gradient(
+      circle at 25px 25px,
+      rgba(99, 102, 241, 0.1) 1px,
+      transparent 0
+    );
+  background-size: 50px 50px;
 }
 
-/* Animations */
+/* Enhanced animations */
 @keyframes gradient-shift {
   0%,
   100% {
@@ -74,19 +116,48 @@ body {
   }
 }
 
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 3s ease infinite;
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
+  }
 }
 
-/* Focus styles */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Enhanced focus styles with glow */
 input:focus,
 textarea:focus,
 button:focus {
   outline: none;
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5);
 }
 
-/* Prose styles for AI responses */
+/* Enhanced prose styles for AI responses */
 .prose {
   color: var(--foreground);
 }
@@ -101,6 +172,10 @@ button:focus {
   font-weight: 600;
   margin-top: 1.5em;
   margin-bottom: 0.5em;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .prose p {
@@ -118,16 +193,97 @@ button:focus {
 }
 
 .prose code {
-  background: var(--muted);
-  padding: 0.125em 0.25em;
-  border-radius: 0.25em;
+  background: rgba(139, 92, 246, 0.1);
+  color: #a855f7;
+  padding: 0.125em 0.5em;
+  border-radius: 0.375em;
   font-size: 0.875em;
+  border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 .prose blockquote {
-  border-left: 4px solid var(--primary);
-  padding-left: 1em;
+  border-left: 4px solid #8b5cf6;
+  background: rgba(139, 92, 246, 0.05);
+  padding: 1em 1.5em;
   margin: 1em 0;
+  border-radius: 0.5em;
   font-style: italic;
   color: var(--muted-foreground);
+}
+
+/* Glass morphism effect */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-intense {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Gradient text utilities */
+.text-gradient-primary {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6, #a855f7);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-secondary {
+  background: linear-gradient(135deg, #06b6d4, #3b82f6, #6366f1);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-accent {
+  background: linear-gradient(135deg, #f59e0b, #ef4444, #ec4899);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Violet and Bubblegum gradient utilities */
+.bg-gradient-violet {
+  background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
+}
+
+.bg-gradient-bubblegum {
+  background: linear-gradient(
+    135deg,
+    #ec4899 0%,
+    #f472b6 30%,
+    #fbbf24 60%,
+    #fb7185 100%
+  );
+}
+
+.text-gradient-violet {
+  background: linear-gradient(135deg, #8b5cf6, #a855f7, #c084fc);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-bubblegum {
+  background: linear-gradient(135deg, #ec4899, #f472b6, #fbbf24, #fb7185);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Enhanced hover effects with violet/bubblegum */
+.hover-violet:hover {
+  background: linear-gradient(135deg, #8b5cf6, #a855f7);
+  box-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+  transform: translateY(-2px);
+}
+
+.hover-bubblegum:hover {
+  background: linear-gradient(135deg, #ec4899, #f472b6);
+  box-shadow: 0 0 30px rgba(236, 72, 153, 0.4);
+  transform: translateY(-2px);
 }

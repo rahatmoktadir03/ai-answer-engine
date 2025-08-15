@@ -1,4 +1,4 @@
-# 🤖 AI Answer Engine
+# 🔍 Insight
 
 A modern, intelligent answer engine built with Next.js and TypeScript that scrapes web content and provides accurate, source-cited responses. Inspired by Perplexity.ai, this project eliminates hallucinations by grounding AI responses in real web data.
 

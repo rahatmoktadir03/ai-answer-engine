@@ -12,28 +12,28 @@ export default function LandingPage() {
       title: "AI-Powered Intelligence",
       description:
         "Advanced language models that understand context and provide accurate, detailed answers.",
-      gradient: "from-blue-500 to-purple-600",
+      gradient: "from-violet-500 via-purple-500 to-violet-600",
     },
     {
       icon: Globe,
       title: "Web Content Scraping",
       description:
         "Automatically extracts and analyzes content from multiple websites to provide comprehensive answers.",
-      gradient: "from-green-500 to-blue-600",
+      gradient: "from-cyan-500 via-blue-500 to-indigo-500",
     },
     {
       icon: Shield,
       title: "Source Citations",
       description:
         "Every answer comes with properly cited sources to ensure transparency and reliability.",
-      gradient: "from-purple-500 to-pink-600",
+      gradient: "from-pink-400 via-pink-500 to-yellow-400",
     },
     {
       icon: Zap,
       title: "Lightning Fast",
       description:
         "Get answers in seconds with our optimized processing pipeline and intelligent caching.",
-      gradient: "from-yellow-500 to-orange-600",
+      gradient: "from-violet-400 via-purple-500 to-pink-500",
     },
   ];
 
@@ -77,8 +77,8 @@ export default function LandingPage() {
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
-              <GradientText gradient="from-blue-400 via-purple-500 to-green-400">
-                AI Answer Engine
+              <GradientText gradient="from-violet-400 via-pink-400 to-yellow-400">
+                Insight
               </GradientText>
             </h1>
 
@@ -92,13 +92,14 @@ export default function LandingPage() {
               <Button
                 href="/chat"
                 size="lg"
+                variant="violet"
                 className="flex items-center gap-2"
               >
                 Start Asking Questions
                 <ArrowRight className="w-5 h-5" />
               </Button>
 
-              <Button variant="outline" size="lg">
+              <Button variant="bubblegum" size="lg">
                 Watch Demo
               </Button>
             </div>
@@ -210,7 +211,9 @@ export default function LandingPage() {
             </h2>
             <p className="text-xl text-gray-300 mb-8">
               Join thousands of researchers, students, and professionals who
-              trust our AI Answer Engine for accurate, cited information.
+              comprehensive research. Whether for academic work or business
+              decisions, trust our Insight platform for accurate, cited
+              information.
             </p>
             <Button
               href="/chat"
@@ -231,7 +234,8 @@ export default function LandingPage() {
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
                 <Search className="w-8 h-8 text-blue-400" />
-                <span className="text-2xl font-bold">AI Answer Engine</span>
+                <span className="text-2xl font-bold">Insight</span>
+                <span className="text-gray-400">by AI Research</span>
               </div>
               <p className="text-gray-400 mb-4 max-w-md">
                 The most advanced AI-powered research assistant that provides
@@ -286,7 +290,7 @@ export default function LandingPage() {
           </div>
 
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 AI Answer Engine. All rights reserved.</p>
+            <p>&copy; 2025 Insight. All rights reserved.</p>
           </div>
         </div>
       </footer>

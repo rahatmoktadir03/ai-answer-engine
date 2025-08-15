@@ -1,4 +1,4 @@
-// AI Answer Engine API Route
+// Insight API Route
 // Implements chat API with Groq and web scraping with Cheerio and Puppeteer
 import puppeteer from "puppeteer";
 import * as cheerio from "cheerio";

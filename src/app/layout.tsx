@@ -14,11 +14,18 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "AI Answer Engine - Intelligent Research Assistant",
+  title: "Insight - Intelligent Research Assistant",
   description:
-    "Advanced AI-powered answer engine that scrapes web content and provides accurate, source-cited responses to your questions.",
-  keywords: ["AI", "Answer Engine", "Research", "Web Scraping", "Citations"],
-  authors: [{ name: "AI Answer Engine Team" }],
+    "Advanced AI-powered research platform that scrapes web content and provides accurate, source-cited responses to your questions.",
+  keywords: [
+    "AI",
+    "Research",
+    "Insight",
+    "Web Scraping",
+    "Citations",
+    "Intelligence",
+  ],
+  authors: [{ name: "Insight Team" }],
   viewport: "width=device-width, initial-scale=1",
 };
 
